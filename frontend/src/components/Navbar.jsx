@@ -5,11 +5,16 @@ import '../index.css';
 
 const Navbar = () => {
   const isLoggedIn = localStorage.getItem("token");
-  const location = useLocation();  // Get the current location object
+  const location = useLocation(); // Get the current location object
   const path = location.pathname; // Get the current path
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle menu visibility
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen); // Function to toggle menu
+
+  const handleLogout = () => {
+    localStorage.clear(); // Clear localStorage
+    window.location.href = "/login"; // Redirect to login page
+  };
 
   return (
     <nav className="navbar">
@@ -22,22 +27,24 @@ const Navbar = () => {
 
       {/* Navigation links */}
       <div className={`navLinks ${isMenuOpen ? 'active' : ''}`}>
-        {isLoggedIn ?
+        {isLoggedIn ? (
           <>
             <Link to="/home" className="navLink">Home</Link>
             <Link to="/ideas" className="navLink">Submit an Idea</Link>
             <Link to="/collaborate" className="navLink">Collaborate on Ideas</Link>
             <Link to="/rewards" className="navLink">Reward Program</Link>
-          </> :
-          <>
-            {path.includes("/signup") &&
-              <Link to="/login" className="navLink" style={{ background: "green", color: "white" }}>Login</Link>
-            }{
-              path.includes("/login") &&
-              <Link to="/signup" className="navLink" style={{ background: "green", color: "white" }}>Signup</Link>
-            }
+            <button onClick={handleLogout} className="navLink logoutButton" style={{cursor: "pointer", background: "#45a049", color: "white", border: "none", textDecoration: "none"}}>Logout</button>
           </>
-        }
+        ) : (
+          <>
+            {path.includes("/signup") && (
+              <Link to="/login" className="navLink" style={{ background: "green", color: "white" }}>Login</Link>
+            )}
+            {path.includes("/login") && (
+              <Link to="/signup" className="navLink" style={{ background: "green", color: "white" }}>Signup</Link>
+            )}
+          </>
+        )}
       </div>
     </nav>
   );
